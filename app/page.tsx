@@ -18,12 +18,13 @@ import Activities from "@/components/Activities";
 import Footer from "@/components/Footer";
 import DynamicHeroBG from "@/components/DynamicHeroBG";
 import Infor from "@/components/infor";
+import Cursor from "@/components/Cursor";
 
 export default function HomePage() {
   return (
     
     <div className="relative min-h-screen bg-black">
-      
+      <Cursor />
       {/* background glows */}
       <DynamicHeroBG /> 
       <div className="pointer-events-none fixed inset-0 overflow-hidden">

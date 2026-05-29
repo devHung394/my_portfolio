@@ -155,3 +155,76 @@
 .animate-float {
   animation: float 20s ease-in-out infinite;
 }
+
+/* ── Custom cursor (pointer devices only) ───────────────────────── */
+@media (pointer: fine) {
+  *, *::before, *::after { cursor: none !important; }
+}
+
+/* ── Custom scrollbar ────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, oklch(0.6 0.25 285), oklch(0.55 0.25 350));
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, oklch(0.65 0.25 285), oklch(0.65 0.25 350));
+}
+
+/* ── Text selection ─────────────────────────────────────────────── */
+::selection {
+  background: oklch(0.6 0.25 285 / 35%);
+  color: oklch(0.98 0.005 264);
+}
+
+/* ── Animated gradient text ─────────────────────────────────────── */
+.gradient-text {
+  background: linear-gradient(135deg, #a855f7 0%, #ec4899 40%, #f97316 70%, #a855f7 100%);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-shift 5s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50%       { background-position: 100% 50%; }
+}
+
+/* ── Fade-up reveal ─────────────────────────────────────────────── */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-up {
+  animation: fade-up 0.65s cubic-bezier(0.21, 0.62, 0.35, 1) both;
+}
+
+/* ── Rotating ring (portrait) ───────────────────────────────────── */
+@keyframes ring-rotate {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.animate-ring-cw  { animation: ring-rotate 8s linear infinite; }
+.animate-ring-ccw { animation: ring-rotate 12s linear infinite reverse; }
+
+/* ── Marquee (tools strip) ──────────────────────────────────────── */
+@keyframes marquee-left {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-marquee-left {
+  animation: marquee-left 28s linear infinite;
+}
+
+/* ── Count-up pulse ─────────────────────────────────────────────── */
+@keyframes stat-pop {
+  0%   { transform: scale(0.8); opacity: 0; }
+  70%  { transform: scale(1.06); }
+  100% { transform: scale(1); opacity: 1; }
+}
+.animate-stat-pop {
+  animation: stat-pop 0.5s cubic-bezier(0.21, 0.62, 0.35, 1) both;
+}
