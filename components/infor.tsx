@@ -10,7 +10,7 @@ const ROLES = ["UI/UX Designer", "Frontend Developer", "Product Thinker"];
 
 const STATS = [
   { value: "4+", label: "Projects" },
-  { value: "3yr", label: "Experience" },
+  { value: "1yr", label: "Experience" },
   { value: "∞", label: "Ideas" },
 ];
 

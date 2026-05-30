@@ -19,7 +19,7 @@ const TOOLS = [
 
 const STATS = [
   { value: "4+",  label: "Projects" },
-  { value: "3yr", label: "Coding" },
+  { value: "1yr", label: "Coding" },
   { value: "2",   label: "Stacks" },
   { value: "3.2", label: "GPA / 4.0" },
 ];
