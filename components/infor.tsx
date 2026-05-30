@@ -1,7 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Download, Mail, Github, Linkedin, Facebook } from "lucide-react";
+import {
+  ArrowRight,
+  Download,
+  Mail,
+  Github,
+  Linkedin,
+  Facebook,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MagneticWrap } from "@/components/MagneticWrap";
 import { useEffect, useState } from "react";
@@ -15,15 +22,19 @@ const STATS = [
 ];
 
 const SOCIALS = [
-  { href: "https://github.com/QuocHung-0309",  Icon: Github,   label: "GitHub" },
-  { href: "https://linkedin.com/in/hungnqh",   Icon: Linkedin, label: "LinkedIn" },
-  { href: "https://facebook.com/whuq394",      Icon: Facebook, label: "Facebook" },
-  { href: "mailto:nqhung394.work@gmail.com",   Icon: Mail,     label: "Email" },
+  { href: "https://github.com/QuocHung-0309", Icon: Github, label: "GitHub" },
+  {
+    href: "https://linkedin.com/in/hungnqh",
+    Icon: Linkedin,
+    label: "LinkedIn",
+  },
+  { href: "https://facebook.com/whuq394", Icon: Facebook, label: "Facebook" },
+  { href: "mailto:nqhung394.work@gmail.com", Icon: Mail, label: "Email" },
 ];
 
 export default function HeroSection() {
-  const [roleIdx, setRoleIdx]   = useState(0);
-  const [fadeIn,  setFadeIn]    = useState(true);
+  const [roleIdx, setRoleIdx] = useState(0);
+  const [fadeIn, setFadeIn] = useState(true);
 
   useEffect(() => {
     const id = setInterval(() => {
@@ -36,7 +47,7 @@ export default function HeroSection() {
     return () => clearInterval(id);
   }, []);
 
-  const left  = ["U", "X", "/", "U", "I"];
+  const left = ["U", "X", "/", "U", "I"];
   const right = ["P", "o", "r", "t", "f", "o", "l", "i", "o"];
 
   return (
@@ -45,7 +56,6 @@ export default function HeroSection() {
       className="relative z-10 flex min-h-screen items-center justify-center px-4 sm:px-6 lg:px-8"
     >
       <div className="w-full max-w-4xl mx-auto flex flex-col items-center text-center">
-
         {/* ── Available badge ── */}
         <div
           className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-4 py-1.5 text-sm text-emerald-300 backdrop-blur-sm animate-fade-up"
@@ -87,7 +97,9 @@ export default function HeroSection() {
             <span className="absolute -inset-3 rounded-full opacity-60 animate-xPulse bg-primary/10" />
             <span className="relative inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-primary/30 bg-primary/10 backdrop-blur-sm">
               <span className="absolute inset-0 rounded-2xl bg-gradient-to-r from-primary/0 via-primary/30 to-primary/0 bg-[length:220%_220%] animate-xShimmer" />
-              <span className="relative text-3xl font-extrabold text-primary">×</span>
+              <span className="relative text-3xl font-extrabold text-primary">
+                ×
+              </span>
             </span>
           </span>
 
@@ -95,7 +107,9 @@ export default function HeroSection() {
             <span
               key={`r${i}`}
               className="inline-block animate-hero-reveal"
-              style={{ animationDelay: `${0.18 + (left.length + 1 + i) * 0.05}s` }}
+              style={{
+                animationDelay: `${0.18 + (left.length + 1 + i) * 0.05}s`,
+              }}
             >
               {ch}
             </span>
@@ -132,7 +146,9 @@ export default function HeroSection() {
         >
           {STATS.map((s, i) => (
             <div key={i} className="flex flex-col items-center px-7 py-3">
-              <span className="text-2xl font-extrabold text-white">{s.value}</span>
+              <span className="text-2xl font-extrabold text-white">
+                {s.value}
+              </span>
               <span className="text-[11px] text-white/40 mt-0.5 tracking-wide">
                 {s.label}
               </span>
@@ -164,11 +180,7 @@ export default function HeroSection() {
               asChild
               className="h-12 rounded-full border-white/15 bg-white/[0.04] px-8 text-base font-medium text-foreground backdrop-blur-sm hover:-translate-y-0.5 hover:bg-white/[0.08] transition-all duration-200"
             >
-              <a
-                href="/NONG-QUOC-HUNG-TopCV.vn-100226.165806.pdf"
-                target="_blank"
-                rel="noreferrer"
-              >
+              <a href="/NongQuocHung-UXUI.pdf" target="_blank" rel="noreferrer">
                 <Download className="mr-2 h-4 w-4" />
                 Download CV
               </a>
@@ -209,31 +221,68 @@ export default function HeroSection() {
       {/* ── Keyframes ── */}
       <style jsx global>{`
         @keyframes hero-reveal {
-          0%  { opacity: 0; transform: translateY(18px) rotateX(35deg); filter: blur(6px); }
-          60% { filter: blur(0); }
-          100%{ opacity: 1; transform: translateY(0) rotateX(0deg); }
+          0% {
+            opacity: 0;
+            transform: translateY(18px) rotateX(35deg);
+            filter: blur(6px);
+          }
+          60% {
+            filter: blur(0);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0) rotateX(0deg);
+          }
         }
         .animate-hero-reveal {
           animation: hero-reveal 0.6s cubic-bezier(0.21, 0.62, 0.35, 1) both;
           will-change: transform, opacity, filter;
         }
         @keyframes hero-pop {
-          0%  { transform: scale(0.92); opacity: 0; }
-          60% { transform: scale(1.06); opacity: 1; }
-          100%{ transform: scale(1); }
+          0% {
+            transform: scale(0.92);
+            opacity: 0;
+          }
+          60% {
+            transform: scale(1.06);
+            opacity: 1;
+          }
+          100% {
+            transform: scale(1);
+          }
         }
-        .animate-hero-pop { animation: hero-pop 0.5s ease-out both; animation-delay: 0.35s; }
+        .animate-hero-pop {
+          animation: hero-pop 0.5s ease-out both;
+          animation-delay: 0.35s;
+        }
         @keyframes xShimmer {
-          0%  { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100%{ background-position: 0% 50%; }
+          0% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+          100% {
+            background-position: 0% 50%;
+          }
         }
-        .animate-xShimmer { animation: xShimmer 3.2s ease-in-out infinite; }
+        .animate-xShimmer {
+          animation: xShimmer 3.2s ease-in-out infinite;
+        }
         @keyframes xPulse {
-          0%, 100%{ opacity: 0.35; transform: scale(1); }
-          50%     { opacity: 0.6;  transform: scale(1.15); }
+          0%,
+          100% {
+            opacity: 0.35;
+            transform: scale(1);
+          }
+          50% {
+            opacity: 0.6;
+            transform: scale(1.15);
+          }
         }
-        .animate-xPulse { animation: xPulse 2.6s ease-in-out infinite; }
+        .animate-xPulse {
+          animation: xPulse 2.6s ease-in-out infinite;
+        }
       `}</style>
     </section>
   );
