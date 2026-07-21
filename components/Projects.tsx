@@ -2,13 +2,10 @@
 
 import { useRef } from "react";
 import Section from "./Section";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Github, ExternalLink } from "lucide-react";
+import { ExternalLink, Github } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 
 type Project = {
   title: string;
@@ -24,7 +21,7 @@ type Project = {
 const PROJECTS: Project[] = [
   {
     title: "FlowerGrad",
-    subtitle: "E-commerce for fundraising (FIT HCMUTE)",
+    subtitle: "E-commerce for fundraising",
     period: "Apr 2025 – May 2025",
     role: "Solo developer",
     bullets: [
@@ -54,7 +51,7 @@ const PROJECTS: Project[] = [
     period: "Sep 2024 – Dec 2024",
     role: "Frontend developer",
     bullets: [
-      "Task management platform with clear navigation & layout.",
+      "Task management with clear navigation & layout.",
       "Responsive, accessible UI for internal operations.",
     ],
     stack: ["TypeScript", "React", "Tailwind CSS"],
@@ -76,236 +73,171 @@ const PROJECTS: Project[] = [
   },
 ];
 
-/* ── 3D Tilt wrapper ─────────────────────────────────────────────── */
-function TiltCard({ children }: { children: React.ReactNode }) {
-  const ref = useRef<HTMLDivElement>(null);
-
-  const onMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const el = ref.current;
-    if (!el) return;
-    const { left, top, width, height } = el.getBoundingClientRect();
-    const x = (e.clientX - left) / width  - 0.5;
-    const y = (e.clientY - top)  / height - 0.5;
-    el.style.transform = `perspective(900px) rotateX(${-y * 5}deg) rotateY(${x * 5}deg) scale3d(1.015,1.015,1.015)`;
-  };
-
-  const onLeave = () => {
-    if (ref.current) ref.current.style.transform = "";
-  };
-
-  return (
-    <div
-      ref={ref}
-      onMouseMove={onMove}
-      onMouseLeave={onLeave}
-      style={{ transition: "transform 0.12s ease", transformStyle: "preserve-3d" }}
-    >
-      {children}
-    </div>
-  );
-}
-
-/* ── Main section ────────────────────────────────────────────────── */
 export default function Projects() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start start", "end end"],
-  });
-  const globalY = useTransform(scrollYProgress, [0, 1], [0, -10]);
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, amount: 0.1 });
+
+  const featured = PROJECTS[0];
+  const rest = PROJECTS.slice(1);
 
   return (
-    <Section id="projects" className="py-24">
-      {/* header */}
-      <div className="mb-12 text-center">
-        <Badge className="border-white/10 bg-white/[0.04] text-white/70">Projects</Badge>
-        <h2 className="mt-4 text-4xl md:text-5xl font-extrabold tracking-tight">
-          Featured{" "}
-          <span className="bg-gradient-to-r from-violet-400 to-sky-300 bg-clip-text text-transparent">
-            Case Studies
-          </span>
-        </h2>
-        <p className="mt-3 max-w-xl mx-auto text-neutral-400 text-sm">
-          A selection of projects spanning e-commerce, mobile apps, and internal tools.
-        </p>
-      </div>
+    <section id="projects" className="py-28 px-6 sm:px-10 lg:px-16 border-b border-[#E5E4E1]">
+      <div className="max-w-6xl mx-auto" ref={ref}>
 
-      {/* layout */}
-      <div ref={sectionRef} className="grid gap-8 md:grid-cols-2">
+        {/* section header */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+          className="mb-16"
+        >
+          <p className="font-mono text-xs tracking-[0.12em] text-[#6B6B67] mb-3">Case studies</p>
+          <h2 className="font-serif text-[clamp(2rem,4.5vw,3rem)] leading-[1.1] text-[#1A1A18]">
+            Selected work
+          </h2>
+        </motion.div>
 
-        {/* LEFT – sticky image viewer (desktop only) */}
-        <div className="relative hidden md:block">
-          <div className="sticky top-24">
-            <Card className="relative overflow-hidden rounded-2xl border border-neutral-800 bg-neutral-950/60">
-              <div className="border-b border-neutral-800/80 px-6 py-5">
-                <p className="text-[15px] text-sky-200/80">Agency-style case studies</p>
-              </div>
-              <div className="relative h-[420px] w-full overflow-hidden bg-gradient-to-b from-neutral-900/40 to-neutral-900/0">
-                <motion.div style={{ y: globalY }} className="absolute inset-0">
-                  {PROJECTS.map((p, i) => (
-                    <ProjectImage key={p.title} idx={i} src={p.image} />
-                  ))}
-                </motion.div>
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-sky-500/10 via-transparent to-transparent" />
-              </div>
-            </Card>
+        {/* featured card — 2 col */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+          className="group grid md:grid-cols-[1fr_1fr] gap-0 border border-[#E5E4E1] rounded-xl overflow-hidden mb-6 hover:border-[#1A1A18]/20 transition-colors"
+        >
+          {/* image */}
+          <div className="relative aspect-[4/3] md:aspect-auto overflow-hidden bg-[#F2F1EE]">
+            <Image
+              src={featured.image}
+              alt={featured.title}
+              fill
+              className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+              sizes="(max-width: 768px) 100vw, 50vw"
+              priority
+            />
+            {/* number badge */}
+            <div className="absolute top-4 left-4 font-mono text-[10px] tracking-wider text-[#1A1A18] bg-[#FAFAF8]/90 backdrop-blur-sm px-2.5 py-1 rounded-full border border-[#E5E4E1]">
+              01
+            </div>
           </div>
-        </div>
 
-        {/* RIGHT – scroll cards */}
-        <div className="space-y-8">
-          {PROJECTS.map((p, i) => (
-            <ProjectCard key={p.title} data={p} idx={i} />
+          {/* content */}
+          <div className="p-8 md:p-10 flex flex-col justify-between bg-[#FAFAF8]">
+            <div>
+              <div className="flex flex-wrap items-center gap-2 mb-5">
+                {featured.period && (
+                  <span className="font-mono text-[10px] tracking-wide text-[#6B6B67] border border-[#E5E4E1] px-2.5 py-1 rounded-full">
+                    {featured.period}
+                  </span>
+                )}
+                {featured.role && (
+                  <span className="font-mono text-[10px] tracking-wide text-[#6B6B67] border border-[#E5E4E1] px-2.5 py-1 rounded-full">
+                    {featured.role}
+                  </span>
+                )}
+              </div>
+
+              <h3 className="font-serif text-2xl text-[#1A1A18] mb-1">{featured.title}</h3>
+              {featured.subtitle && (
+                <p className="font-mono text-xs text-[#6B6B67] mb-4">{featured.subtitle}</p>
+              )}
+
+              <ul className="space-y-2">
+                {featured.bullets.map((b, i) => (
+                  <li key={i} className="text-sm leading-relaxed text-[#6B6B67]">{b}</li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="mt-6">
+              <div className="flex flex-wrap gap-1.5 mb-5">
+                {featured.stack.map((t) => (
+                  <span key={t} className="font-mono text-[10px] tracking-wide text-[#6B6B67] bg-[#F2F1EE] border border-[#E5E4E1] px-2.5 py-1 rounded-full">
+                    {t}
+                  </span>
+                ))}
+              </div>
+              <div className="flex gap-4">
+                {featured.links?.live && (
+                  <Link
+                    href={featured.links.live}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 font-mono text-xs text-[#1A1A18] border-b border-[#1A1A18] pb-0.5 hover:text-[#B87355] hover:border-[#B87355] transition-colors"
+                  >
+                    <ExternalLink className="h-3 w-3" /> Live site
+                  </Link>
+                )}
+                {featured.links?.repo && (
+                  <Link
+                    href={featured.links.repo}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 font-mono text-xs text-[#6B6B67] hover:text-[#1A1A18] transition-colors"
+                  >
+                    <Github className="h-3 w-3" /> Code
+                  </Link>
+                )}
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* supporting cards — 3 col */}
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {rest.map((p, i) => (
+            <motion.div
+              key={p.title}
+              initial={{ opacity: 0, y: 16 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.18 + i * 0.08 }}
+              className="group border border-[#E5E4E1] rounded-xl overflow-hidden hover:border-[#1A1A18]/20 hover:-translate-y-0.5 transition-all duration-200"
+            >
+              {/* image */}
+              <div className="relative aspect-[3/2] overflow-hidden bg-[#F2F1EE]">
+                <Image
+                  src={p.image}
+                  alt={p.title}
+                  fill
+                  className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                />
+                <div className="absolute top-3 left-3 font-mono text-[10px] tracking-wider text-[#1A1A18] bg-[#FAFAF8]/90 backdrop-blur-sm px-2 py-0.5 rounded-full border border-[#E5E4E1]">
+                  0{i + 2}
+                </div>
+              </div>
+
+              {/* content */}
+              <div className="p-5 bg-[#FAFAF8]">
+                <h3 className="font-serif text-lg text-[#1A1A18] mb-0.5">{p.title}</h3>
+                {p.subtitle && (
+                  <p className="font-mono text-[10px] text-[#6B6B67] mb-3">{p.subtitle}</p>
+                )}
+                <div className="flex flex-wrap gap-1.5 mb-4">
+                  {p.stack.map((t) => (
+                    <span key={t} className="font-mono text-[10px] text-[#6B6B67] bg-[#F2F1EE] border border-[#E5E4E1] px-2 py-0.5 rounded-full">
+                      {t}
+                    </span>
+                  ))}
+                </div>
+                <div className="flex gap-3">
+                  {p.links?.live && (
+                    <Link href={p.links.live} target="_blank" rel="noopener noreferrer"
+                      className="font-mono text-[10px] text-[#1A1A18] border-b border-[#1A1A18] pb-0.5 hover:text-[#B87355] hover:border-[#B87355] transition-colors inline-flex items-center gap-1">
+                      <ExternalLink className="h-2.5 w-2.5" /> Live
+                    </Link>
+                  )}
+                  {p.links?.repo && (
+                    <Link href={p.links.repo} target="_blank" rel="noopener noreferrer"
+                      className="font-mono text-[10px] text-[#6B6B67] hover:text-[#1A1A18] transition-colors inline-flex items-center gap-1">
+                      <Github className="h-2.5 w-2.5" /> Code
+                    </Link>
+                  )}
+                </div>
+              </div>
+            </motion.div>
           ))}
         </div>
       </div>
-    </Section>
-  );
-}
-
-/* ── Sticky image (desktop left panel) ─────────────────────────── */
-function ProjectImage({ idx, src }: { idx: number; src: string }) {
-  const ref = useRef<HTMLDivElement>(null);
-
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["center 80%", "center 20%"],
-  });
-
-  const smooth = useSpring(scrollYProgress, {
-    stiffness: 60,
-    damping: 22,
-    mass: 0.7,
-  });
-
-  const opacity = useTransform(smooth, [0, 0.55, 0.65, 0.9, 1], [0, 0, 1, 1, 0]);
-  const y       = useTransform(smooth, [0, 1], [12, -12]);
-
-  return (
-    <motion.div
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      ref={(node: HTMLDivElement | null) => {
-        const anchor = document.querySelector(`[data-project-anchor='${idx}']`);
-        if (anchor) (ref as React.MutableRefObject<HTMLElement | null>).current = anchor as HTMLElement;
-      }}
-      className="absolute inset-0"
-      style={{ opacity, y }}
-    >
-      <Image
-        src={src || "/placeholder.jpg"}
-        alt={`Project ${idx + 1}`}
-        fill
-        className="object-cover"
-        sizes="(max-width: 768px) 100vw, 50vw"
-        priority
-      />
-    </motion.div>
-  );
-}
-
-/* ── Project card (right column, with 3D tilt) ──────────────────── */
-function ProjectCard({ data, idx }: { data: Project; idx: number }) {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: cardRef,
-    offset: ["start 85%", "end 50%"],
-  });
-  const y       = useTransform(scrollYProgress, [0, 1], [18, 0]);
-  const opacity = useTransform(scrollYProgress, [0, 1], [0,  1]);
-
-  return (
-    <motion.div ref={cardRef} style={{ y, opacity }}>
-      {/* anchor for image sync */}
-      <div
-        data-project-anchor={idx}
-        className="pointer-events-none absolute h-0 w-0"
-      />
-
-      <TiltCard>
-        {/* mobile image (shows on < md) */}
-        <div className="relative mb-0 block md:hidden aspect-[16/9] overflow-hidden rounded-t-2xl border-x border-t border-neutral-800">
-          <Image
-            src={data.image || "/placeholder.jpg"}
-            alt={data.title}
-            fill
-            className="object-cover"
-            sizes="100vw"
-          />
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-neutral-950/80 via-transparent to-transparent" />
-        </div>
-
-        <Card
-          className={`rounded-b-2xl md:rounded-2xl border-x border-b md:border
-            border-neutral-800 bg-neutral-900/60 p-6 md:p-8
-            hover:border-neutral-700 transition-colors duration-300`}
-        >
-          {/* meta badges */}
-          <div className="mb-4 flex flex-wrap items-center gap-2">
-            {data.period && (
-              <Badge className="rounded-full border border-violet-500/30 bg-violet-500/10 px-3 py-1 text-[11px] text-violet-300">
-                {data.period}
-              </Badge>
-            )}
-            {data.role && (
-              <Badge className="border border-neutral-700 bg-neutral-900/70 text-neutral-200">
-                {data.role}
-              </Badge>
-            )}
-          </div>
-
-          <h3 className="text-2xl font-bold">{data.title}</h3>
-          {data.subtitle && (
-            <p className="text-sm text-neutral-400">• {data.subtitle}</p>
-          )}
-
-          <div className="mt-4 space-y-2 text-neutral-300">
-            {data.bullets.map((b, i) => (
-              <div key={i} className="flex items-start gap-3">
-                <span className="mt-[7px] inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-sky-400" />
-                <p className="leading-relaxed text-[15px] text-white/75">{b}</p>
-              </div>
-            ))}
-          </div>
-
-          {/* stack */}
-          <div className="mt-5 flex flex-wrap gap-2">
-            {data.stack.map((t) => (
-              <Badge key={t} variant="secondary" className="border-neutral-800 bg-neutral-800/60 text-neutral-200">
-                {t}
-              </Badge>
-            ))}
-          </div>
-
-          {/* links */}
-          <div className="mt-5 flex gap-3">
-            {data.links?.live && (
-              <Button
-                asChild
-                size="sm"
-                variant="outline"
-                className="rounded-full bg-transparent border-neutral-700 hover:bg-white/5 hover:-translate-y-0.5 transition-all"
-              >
-                <Link href={data.links.live} target="_blank" rel="noopener noreferrer">
-                  <ExternalLink className="mr-2 h-4 w-4" /> Live
-                </Link>
-              </Button>
-            )}
-            {data.links?.repo && (
-              <Button
-                asChild
-                size="sm"
-                variant="outline"
-                className="rounded-full bg-transparent border-neutral-700 hover:bg-white/5 hover:-translate-y-0.5 transition-all"
-              >
-                <Link href={data.links.repo} target="_blank" rel="noopener noreferrer">
-                  <Github className="mr-2 h-4 w-4" /> Code
-                </Link>
-              </Button>
-            )}
-          </div>
-        </Card>
-      </TiltCard>
-    </motion.div>
+    </section>
   );
 }
