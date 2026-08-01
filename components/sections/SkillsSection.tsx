@@ -1,8 +1,49 @@
 "use client";
 
-import Image from "next/image";
 import { motion } from "framer-motion";
 import { stagger, viewport } from "@/lib/animations";
+import { useLanguage } from "@/components/LanguageProvider";
+
+type Segment = { text: string; bold?: boolean };
+const b = (text: string): Segment => ({ text, bold: true });
+const p = (text: string): Segment => ({ text });
+
+const TEXT = {
+  vi: {
+    heading: "Mình làm những gì",
+    skills: [
+      {
+        title: "UX / UI Design",
+        desc: [p("Từ nghiên cứu người dùng, wireframe cho đến hệ thống UI hoàn chỉnh trong "), b("Figma"), p(", luôn sẵn sàng bàn giao cho dev.")],
+      },
+      {
+        title: "Frontend",
+        desc: [b("React"), p(" và "), b("Next.js"), p(" với "), b("TypeScript"), p(", kiến trúc component rõ ràng, animation mượt, và UI chuẩn từng pixel.")],
+      },
+      {
+        title: "Triển khai hệ thống & BA",
+        desc: [p("Thu thập yêu cầu nghiệp vụ, viết tài liệu đặc tả, và phối hợp cùng đội phát triển để hệ thống lên đúng tiến độ.")],
+      },
+    ],
+  },
+  en: {
+    heading: "What I do",
+    skills: [
+      {
+        title: "UX / UI Design",
+        desc: [p("From user research and wireframes to a full UI system in "), b("Figma"), p(", always handed off dev-ready.")],
+      },
+      {
+        title: "Frontend",
+        desc: [b("React"), p(" and "), b("Next.js"), p(" with "), b("TypeScript"), p(", clean component architecture, smooth animation, pixel-perfect UI.")],
+      },
+      {
+        title: "System Implementation & BA",
+        desc: [p("Gathering business requirements, writing specs, and working with the dev team to ship systems on time.")],
+      },
+    ],
+  },
+};
 
 const MARQUEE = [
   "Figma", "React", "Next.js", "TypeScript", "Tailwind CSS",
@@ -12,13 +53,10 @@ const MARQUEE = [
   "Jira", "Trello", "Postman", "Agile / Scrum",
 ];
 
-const GRADIENT_BORDER = {
-  background: "linear-gradient(135deg, #2A2A26, #1A1A18)",
-  borderRadius: "1rem",
-  padding: "1px",
-} as const;
-
 export default function SkillsSection() {
+  const { lang } = useLanguage();
+  const t = TEXT[lang];
+
   return (
     <section id="skills" className="px-6 sm:px-10 lg:px-20 py-24 border-b border-rim">
       <div className="max-w-7xl mx-auto">
@@ -29,161 +67,57 @@ export default function SkillsSection() {
           viewport={viewport}
           className="font-serif text-[clamp(2rem,4.2vw,2.8rem)] text-snow leading-[1.1] mb-16"
         >
-          What I do
+          {t.heading}
         </motion.h2>
 
-        {/* 2 cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
-
-          {/* ── Card 1: UX / UI Design ── */}
-          <motion.div
-            {...stagger(1)}
-            whileInView={stagger(1).animate}
-            viewport={viewport}
-            className="flex flex-col"
-            style={GRADIENT_BORDER}
-          >
-            <div className="flex-1 rounded-[15px] bg-surface flex flex-col min-h-[520px] group overflow-hidden">
-              {/* top content */}
-              <div className="p-8 flex flex-col gap-4 shrink-0">
-                <span className="font-mono text-[10px] tracking-[0.14em] uppercase text-moss">
-                  Full process
-                </span>
-
-                <h3 className="font-serif text-[2.25rem] leading-[1.1] text-snow">
-                  UX / UI Design
+        {/* capability list, editorial style */}
+        <div className="border-t border-rim">
+          {t.skills.map((skill, i) => (
+            <motion.div
+              key={skill.title}
+              {...stagger(i + 1)}
+              whileInView={stagger(i + 1).animate}
+              viewport={viewport}
+              className="grid md:grid-cols-[260px_1fr] gap-3 md:gap-16 py-9 border-b border-rim items-baseline"
+            >
+              <div className="flex items-center gap-3">
+                <span className="w-1 h-5 rounded-full bg-moss/60 shrink-0" />
+                <h3 className="font-serif text-xl md:text-2xl leading-snug text-snow">
+                  {skill.title}
                 </h3>
-
-                <p className="text-dust text-[13px] leading-relaxed max-w-[320px]">
-                  From user research and wireframes to polished UI systems,
-                  then dev-ready Figma handoff.
-                </p>
-
-                {/* tool icon boxes */}
-                <div className="flex gap-3 mt-2">
-                  {[
-                    { abbr: "Fg", title: "Figma" },
-                    { abbr: "Ai", title: "Adobe Illustrator" },
-                    { abbr: "Mi", title: "Miro" },
-                  ].map(({ abbr, title }) => (
-                    <div
-                      key={abbr}
-                      title={title}
-                      className="w-10 h-10 rounded-xl border border-rim bg-ink
-                        flex items-center justify-center
-                        font-mono text-[11px] text-dust
-                        hover:border-dust hover:text-snow
-                        transition-colors duration-200"
-                    >
-                      {abbr}
-                    </div>
-                  ))}
-                </div>
               </div>
-
-              {/* image mockup */}
-              <div className="relative flex-1 mx-4 mb-4 rounded-xl overflow-hidden border border-rim bg-ink min-h-[220px]">
-                <Image
-                  src="/modern-ecommerce-interface.png"
-                  alt="UI Design mockup"
-                  fill
-                  className="object-cover object-top opacity-60
-                    group-hover:opacity-85 group-hover:scale-[1.02]
-                    transition-all duration-700 ease-out"
-                />
-                {/* bottom gradient blend */}
-                <div
-                  className="absolute inset-0 pointer-events-none"
-                  style={{ background: "linear-gradient(to top, #141412 0%, transparent 55%)" }}
-                />
-                {/* float label */}
-                <div className="absolute top-3 left-3 flex items-center gap-2
-                  bg-ink/80 backdrop-blur-sm border border-rim rounded-lg px-3 py-1.5">
-                  <span className="font-mono text-[9px] tracking-[0.1em] text-dust uppercase">
-                    Figma · Design System
-                  </span>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* ── Card 2: Frontend ── */}
-          <motion.div
-            {...stagger(2)}
-            whileInView={stagger(2).animate}
-            viewport={viewport}
-            className="flex flex-col"
-            style={GRADIENT_BORDER}
-          >
-            <div className="flex-1 rounded-[15px] bg-surface flex flex-col min-h-[520px] group overflow-hidden">
-              {/* top content */}
-              <div className="p-8 flex flex-col gap-4 shrink-0">
-                <span className="font-mono text-[10px] tracking-[0.14em] uppercase text-moss">
-                  Build &amp; ship
-                </span>
-
-                <h3 className="font-serif text-[2.25rem] leading-[1.1] text-snow">
-                  Frontend
-                </h3>
-
-                <p className="text-dust text-[13px] leading-relaxed max-w-[320px]">
-                  React and Next.js with TypeScript, component architecture,
-                  animations, and pixel-perfect UI implementation.
-                </p>
-
-                {/* tool chips */}
-                <div className="flex flex-wrap gap-2 mt-2">
-                  {["React", "Next.js", "TypeScript", "Tailwind", "Framer Motion", "Git"].map((t) => (
-                    <span
-                      key={t}
-                      className="font-mono text-[10px] px-3 py-1.5 rounded-lg
-                        border border-rim text-dust tracking-[0.06em]
-                        hover:border-dust hover:text-snow transition-colors duration-200"
-                    >
-                      {t}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              {/* real project screenshot */}
-              <div className="relative flex-1 mx-4 mb-4 rounded-xl overflow-hidden border border-rim bg-ink min-h-[220px]">
-                <Image
-                  src="/ahhtravel.jpg"
-                  alt="AHH Travel interface"
-                  fill
-                  className="object-cover object-top opacity-60
-                    group-hover:opacity-85 group-hover:scale-[1.02]
-                    transition-all duration-700 ease-out"
-                />
-                <div
-                  className="absolute inset-0 pointer-events-none"
-                  style={{ background: "linear-gradient(to top, #141412 0%, transparent 55%)" }}
-                />
-                <div className="absolute top-3 right-3 flex items-center gap-2
-                  bg-ink/80 backdrop-blur-sm border border-rim rounded-lg px-3 py-1.5">
-                  <span className="font-mono text-[9px] tracking-[0.1em] text-dust uppercase">
-                    Next.js · TypeScript
-                  </span>
-                </div>
-              </div>
-            </div>
-          </motion.div>
+              <p className="text-dust text-[14px] leading-relaxed max-w-lg">
+                {skill.desc.map((seg, j) =>
+                  seg.bold ? (
+                    <span key={j} className="text-snow font-medium">{seg.text}</span>
+                  ) : (
+                    <span key={j}>{seg.text}</span>
+                  )
+                )}
+              </p>
+            </motion.div>
+          ))}
         </div>
       </div>
 
-      {/* marquee */}
-      <div className="mt-12 overflow-hidden border-t border-rim pt-8">
-        <div className="flex gap-8 animate-marquee whitespace-nowrap">
+      {/* marquee, big statement band */}
+      <div className="mt-16 border-y border-rim py-8 overflow-hidden">
+        <div
+          className="flex gap-10 animate-marquee whitespace-nowrap"
+          style={{ animationDuration: "38s" }}
+        >
           {[0, 1].map((copy) => (
-            <span key={copy} className="flex gap-8 shrink-0">
-              {MARQUEE.map((skill) => (
-                <span
-                  key={skill}
-                  className="font-mono text-[11px] tracking-[0.12em] uppercase text-dust"
-                >
-                  {skill}
-                  <span className="text-rim mx-3">·</span>
+            <span key={copy} className="flex items-center gap-10 shrink-0">
+              {MARQUEE.map((skill, i) => (
+                <span key={skill} className="flex items-center gap-10">
+                  <span
+                    className={`font-serif italic text-[clamp(1.4rem,3vw,2.1rem)] leading-none ${
+                      i % 2 === 0 ? "text-snow/80" : "text-dust"
+                    }`}
+                  >
+                    {skill}
+                  </span>
+                  <span className="text-moss text-lg leading-none">·</span>
                 </span>
               ))}
             </span>

@@ -2,13 +2,22 @@
 
 import { useRef, useEffect, useState } from "react";
 import { motion, useInView } from "framer-motion";
+import { useLanguage } from "@/components/LanguageProvider";
 
-const STATS = [
-  { to: 5, suffix: "+", decimals: 0, label: "Projects shipped" },
-  { to: 2, suffix: "yr", decimals: 0, label: "Design & dev" },
-  { to: 3.21, suffix: "", decimals: 2, label: "GPA / 4.0" },
-  { to: 4, suffix: "", decimals: 0, label: "Leadership roles" },
-];
+const STATS = {
+  vi: [
+    { to: 5, suffix: "+", decimals: 0, label: "Dự án đã làm" },
+    { to: 2, suffix: "năm", decimals: 0, label: "Thiết kế & code" },
+    { to: 3.21, suffix: "", decimals: 2, label: "GPA / 4.0" },
+    { to: 4, suffix: "", decimals: 0, label: "Vai trò lãnh đạo" },
+  ],
+  en: [
+    { to: 5, suffix: "+", decimals: 0, label: "Projects shipped" },
+    { to: 2, suffix: "yr", decimals: 0, label: "Design & dev" },
+    { to: 3.21, suffix: "", decimals: 2, label: "GPA / 4.0" },
+    { to: 4, suffix: "", decimals: 0, label: "Leadership roles" },
+  ],
+};
 
 function Counter({
   to, suffix, decimals, duration = 1400,
@@ -40,10 +49,13 @@ function Counter({
 }
 
 export default function StatsSection() {
+  const { lang } = useLanguage();
+  const stats = STATS[lang];
+
   return (
     <section className="border-b border-rim px-6 sm:px-10 lg:px-20">
       <div className="max-w-7xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-y-8 py-10">
-        {STATS.map((s, i) => (
+        {stats.map((s, i) => (
           <motion.div
             key={s.label}
             initial={{ opacity: 0, y: 14 }}

@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLanguage } from "@/components/LanguageProvider";
 
 export default function IntroScreen() {
+  const { lang } = useLanguage();
   const [visible, setVisible] = useState(() => {
     if (typeof window === "undefined") return true;
     return !sessionStorage.getItem("nqh-intro-seen");
@@ -52,7 +54,7 @@ export default function IntroScreen() {
               className="border border-rim rounded-full px-7 py-2.5"
             >
               <p className="font-mono text-[11px] tracking-[0.16em] text-dust animate-pulse">
-                Click anywhere to enter
+                {lang === "vi" ? "Chạm để bắt đầu" : "Click anywhere to enter"}
               </p>
             </motion.div>
           </div>

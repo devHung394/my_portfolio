@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Github, Linkedin, Facebook } from "lucide-react";
 import { stagger, viewport } from "@/lib/animations";
 import { MagneticWrap } from "@/components/MagneticWrap";
+import { useLanguage } from "@/components/LanguageProvider";
 
 const SOCIALS = [
   { href: "https://github.com/QuocHung-0309", Icon: Github,   label: "GitHub" },
@@ -11,9 +12,15 @@ const SOCIALS = [
   { href: "https://facebook.com/whuq394",     Icon: Facebook, label: "Facebook" },
 ];
 
+const TEXT = {
+  vi: { line1: "Cùng làm ra", line2: "điều gì đó thật hay." },
+  en: { line1: "Let's build", line2: "something good." },
+};
+
 export default function ContactSection() {
+  const { lang } = useLanguage();
+  const t = TEXT[lang];
   return (
-    <>
       <section
         id="contact"
         className="relative px-6 sm:px-10 lg:px-20 py-32 border-t border-rim overflow-hidden"
@@ -37,8 +44,8 @@ export default function ContactSection() {
             viewport={viewport}
             className="font-serif text-[clamp(2.8rem,6vw,5.5rem)] leading-[1.0] text-snow mb-16"
           >
-            Let&apos;s build<br />
-            <em className="not-italic italic text-dust">something good.</em>
+            {t.line1}<br />
+            <em className="not-italic italic text-dust">{t.line2}</em>
           </motion.h2>
 
           {/* email + socials row */}
@@ -79,18 +86,5 @@ export default function ContactSection() {
           </motion.div>
         </div>
       </section>
-
-      {/* footer */}
-      <footer className="relative z-10 px-6 sm:px-10 lg:px-20 py-6 border-t border-rim">
-        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
-          <span className="font-mono text-[10px] text-dust tracking-[0.08em]">
-            &copy; 2026 Nông Quốc Hưng
-          </span>
-          <span className="font-mono text-[10px] text-dust tracking-[0.08em]">
-            Built with Next.js · Tailwind · Framer Motion
-          </span>
-        </div>
-      </footer>
-    </>
   );
 }
